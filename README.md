@@ -64,14 +64,19 @@ python 文件夹下运行
 `python3 Allocation.py --dbpath /Users/hao/Desktop/go/Dormitory-Distribution-System/gorm.db`
 
 ### drop
-drop table user_questionnaire_data;
+drop table user_questionnaire_datas;
 drop table user_base_infos;
 
 ### select
-select * from user_questionnaire_data;
+
+
+select * from user_questionnaire_datas;
 select * from user_base_infos;
+
 
 PRAGMA table_info(user_base_infos);
 
 python3 ./python/Allocation.py --dbpath gorm.db --image del.png --rounds=1000 --end_bound=100
 python3 ./python/Allocation.py --dbpath gorm.db --image del.png --rounds=1000 --end_bound=100
+
+

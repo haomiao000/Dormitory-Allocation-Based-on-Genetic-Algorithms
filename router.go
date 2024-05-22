@@ -4,7 +4,7 @@ import (
 	"Dormitory-Distribution-System/controller"
 	"net/http"
 	"strings"
-
+	"Dormitory-Distribution-System/midware"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -13,7 +13,6 @@ import (
 type Results struct {
 	Name string `json:"name"`
 }
-
 type QuestionnaireInfo struct {
 	QID    int    `json:"qid"`
 	Title  string `json:"title"`
@@ -52,35 +51,7 @@ type QuestionnaireData struct {
 	Snore              interface{} `json:"snore"`
 	SleepQuality       interface{} `json:"sleepQuality"`
 }
-type UserBaseInfo struct {
-	UID                    uint   `gorm:"column:uid;primaryKey;autoIncrement"`
-	Name                   string `gorm:"column:name"`
-	Sex                    string `gorm:"column:sex"`
-	Major                  string `gorm:"column:major"`
-	Age                    string `gorm:"column:age"`
-	Homestr                string `gorm:"column:home"`
-	SychronizedSchedule    string `gorm:"column:sychronizedSchedule"`
-	SpendingResponsibility string `gorm:"column:spendingResponsibility"`
-	Interests              string `gorm:"column:interests"`
-}
-type UserQuestionnaireData struct {
-	UID                     uint   `gorm:"column:uid;primaryKey;autoIncrement"`
-	BedTime                 string `gorm:"column:bedTime"`
-	WakeUpTime              string `gorm:"column:wakeUpTime"`
-	SleepQuality            string `gorm:"column:sleepQuality"`
-	DomStudy                string `gorm:"column:domStudy"`
-	Smoke                   string `gorm:"column:smoke"`
-	Drink                   string `gorm:"column:drink"`
-	Snore                   string `gorm:"column:snore"`
-	ChattingSharinsThoushts string `gorm:"column:chattingSharinsThoushts"`
-	Leanliness              string `gorm:"column:leanliness"`
-	Cleaningfrsgueney       string `gorm:"column:cleaningfrsgueney"`
-	ShowerFrequency         string `gorm:"column:showerkrequency"`
-	MonthlyBudget           string `gorm:"column:monthlyBudset"`
-	JointOutings            string `gorm:"column:jointOutings"`
-	SharedExpenses          string `gorm:"column:sharedExpenses"`
-	SharedInterests         string `gorm:"column:sharedInterests"`
-}
+
 
 func InitRouter(r *gin.Engine) {
 
@@ -136,8 +107,8 @@ func InitRouter(r *gin.Engine) {
 		if err != nil {
 			panic(err)
 		}
-		db.AutoMigrate(&UserBaseInfo{})
-		var data2 UserBaseInfo
+		db.AutoMigrate(&midware.UserBaseInfo{})
+		var data2 midware.UserBaseInfo
 		data2.Age = requestData.Age
 		data2.Name = requestData.Name
 		data2.Major = requestData.Major
@@ -152,12 +123,8 @@ func InitRouter(r *gin.Engine) {
 		data2.Interests = strings.Join(requestData.Hobby, ",")
 		
 			db.Create(&data2)
-			// var uu = new(UserBaseInfo)
-			// db.First(uu)
-			// fmt.Printf("%#v\n", uu)
-
-			db.AutoMigrate(&UserQuestionnaireData{})
-			var data UserQuestionnaireData
+			db.AutoMigrate(&midware.UserQuestionnaireData{})
+			var data midware.UserQuestionnaireData
 
 			data.UID = data2.UID
 			data.BedTime = requestData.SleepTime.(string)
@@ -175,13 +142,6 @@ func InitRouter(r *gin.Engine) {
 			data.JointOutings = requestData.OutCost.(string)
 			data.SharedExpenses = requestData.ShareCost.(string)
 			data.SharedInterests = requestData.HobbySameExpection.(string)
-
 			db.Create(&data)
-		// }
-		// db.Commit()
-		// var u = new(UserQuestionnaireData)
-		// db.Last(u)
-		// fmt.Printf("%#v\n", u)
-
 	})
 }
