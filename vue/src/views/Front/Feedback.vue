@@ -15,7 +15,9 @@
 
 <script>
 
+import request from "@/utils/request";
 import axios from "axios"
+import { Message } from 'element-ui';
 export default {
   name: "FeedbackView",
   data(){
@@ -25,10 +27,12 @@ export default {
   },
   methods:{
     submit(){
-      axios.post("http://localhost:8080/feedback",{
+      request.post("http://localhost:8080/feedback",{
         "content":this.input
       }).then(res=>{
         console.log(res)
+      },err=>{
+        Message.error(err)
       })
     }
   },
