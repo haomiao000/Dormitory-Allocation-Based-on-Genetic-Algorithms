@@ -4,10 +4,10 @@ import "time"
 
 // 登录表
 type Login struct {
-	UID          int64  `gorm:"column:UID;             type:INT PRIMARY KEY AUTOINCREMENT"`
-	Authority    int64  `gorm:"column:Authority;       type:INT"`
-	SchoolNumber string `gorm:"column:SchoolNumber;    type:NVARCHAR NOT NULL"`
-	PassWord     string `gorm:"column:PassWord;        type:NVARCHAR NOT NULL"`
+	UID          int64  `gorm:"column:uid;             type:INT PRIMARY KEY AUTOINCREMENT"`
+	Authority    int64  `gorm:"column:authority;       type:INT"`
+	SchoolNumber string `gorm:"column:schoolNumber;    type:NVARCHAR NOT NULL"`
+	PassWord     string `gorm:"column:passWord;        type:NVARCHAR NOT NULL"`
 }
 
 type UserBaseInfo struct {
@@ -58,6 +58,8 @@ type InformationFeedback struct {
 	FeedbackContent string    `gorm:"column:feedbackcontent;          		type:NVARCHAR"`
 	TimeStamp       time.Time `gorm:"column:timestamp;          			type:TIMESTAMP"`
 }
+
+//反馈信息表
 type UserFeedback struct {
 	ID              uint   `gorm:"column:id;auto_increment;primary_key"`
 	UserID          int64  `gorm:"not null"`
