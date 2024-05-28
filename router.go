@@ -144,4 +144,6 @@ func InitRouter(r *gin.Engine) {
 			data.SharedInterests = requestData.HobbySameExpection.(string)
 			db.Create(&data)
 	})
+
+	r.POST("/feedback", controller.Feedback)
 }
