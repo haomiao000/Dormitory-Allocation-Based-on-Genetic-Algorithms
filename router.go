@@ -54,10 +54,13 @@ type QuestionnaireData struct {
 
 
 func InitRouter(r *gin.Engine) {
+	r.POST("/register" , controller.Register)
+	r.POST("/login" , controller.Login)
 
-	g1 := r.Group("/user")
+	g1 := r.Group("/auth")
+	g1.Use(midware.AuthMiddleware())
 	{
-		g1.POST("/login/", controller.Login)
+		g1.POST("/check_session", midware.GetUserHandler)
 	}
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:8081")

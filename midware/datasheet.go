@@ -4,7 +4,7 @@ import "time"
 
 // 登录表
 type Login struct {
-	UID          int64  `gorm:"column:uid;             type:INT PRIMARY KEY AUTOINCREMENT"`
+	UID          int64   `gorm:"column:uid;auto_increment;primary_key"`
 	Authority    int64  `gorm:"column:authority;       type:INT"`
 	SchoolNumber string `gorm:"column:schoolNumber;    type:NVARCHAR NOT NULL"`
 	PassWord     string `gorm:"column:passWord;        type:NVARCHAR NOT NULL"`
