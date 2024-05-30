@@ -1,14 +1,14 @@
 
 -- Login 表
-CREATE TABLE IF NOT EXISTS logins{
+CREATE TABLE IF NOT EXISTS logins(
     uid INTEGER PRIMARY AUTOINCREMENT,
     Authority INTEGER,
     SchoolNumber NVARCHAR NOT NULL,
     PassWord NVARCHAR NOT NULL,
-};
+);
 
 -- 用户信息表
-CREATE TABLE IF NOT EXISTS user_base_infos{
+CREATE TABLE IF NOT EXISTS user_base_infos(
     uid INTEGER PRIMARY AUTOINCREMENT,
     name INTEGER,
     sex NVARCHAR,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS user_base_infos{
     sychronizedSchedule NVARCHAR,
     spendingResponsibility NVARCHAR,
     interests NVARCHAR
-};
+);
 
 -- 用户问卷表
 CREATE TABLE IF NOT EXISTS user_questionnaire_datas(

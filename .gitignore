@@ -9,3 +9,7 @@ PlayTheMudWithGolang/testtools/q_db/
 
 # 忽略 PlayTheMudWithGolang/testtools/d_db 目录及其内容
 PlayTheMudWithGolang/testtools/d_db/
+
+PlayTheMudWithGolang/Dormitory-Distribution-System
+
+PlayTheMudWithGolang/go.mod
