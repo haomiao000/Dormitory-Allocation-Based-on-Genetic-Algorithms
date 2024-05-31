@@ -16,10 +16,11 @@ const request = axios.create(config);
 // 请求拦截器
 request.interceptors.request.use(
   config => {
-    config.url = requestUrl + config.url;
     if (["/login", "/register"].includes(config.url)) {
+      config.url = requestUrl + config.url;
      return config  // 登录注册接口不需要token
     }
+    config.url = requestUrl + config.url;
     // 在发送请求之前做些什么
     const token = localStorage.getItem('token');
     // const token = store.getters['auth/token']; // 从 Vuex 获取 token
