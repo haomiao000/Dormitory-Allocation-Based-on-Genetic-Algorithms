@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import router from '@/router';
+import { requestUrl } from './contants';
 
 let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
@@ -15,8 +16,12 @@ const request = axios.create(config);
 // 请求拦截器
 request.interceptors.request.use(
   config => {
+    config.url = requestUrl + config.url;
+    if (["/login", "/register"].includes(config.url)) {
+     return config  // 登录注册接口不需要token
+    }
     // 在发送请求之前做些什么
-    const token =localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     // const token = store.getters['auth/token']; // 从 Vuex 获取 token
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`; // 让每个请求携带自定义 token

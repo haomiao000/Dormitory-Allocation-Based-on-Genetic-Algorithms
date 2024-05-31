@@ -54,18 +54,10 @@ type QuestionnaireData struct {
 
 
 func InitRouter(r *gin.Engine) {
-	r.POST("/register" , controller.Register)
-	r.POST("/login" , controller.Login)
-
-	g1 := r.Group("/auth")
-	g1.Use(midware.AuthMiddleware())
-	{
-		g1.POST("/check_session", midware.GetUserHandler)
-	}
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:8081")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusOK)
@@ -73,6 +65,17 @@ func InitRouter(r *gin.Engine) {
 		}
 		c.Next()
 	})
+	r.POST("/register" , controller.Register)
+	r.POST("/login" , controller.Login)
+	r.POST("/feedback", controller.Feedback)
+
+
+	g1 := r.Group("/auth")
+	g1.Use(midware.AuthMiddleware())
+	{
+		g1.POST("/check_session", midware.GetUserHandler)
+	}
+	
 	r.GET("/questionnaireInfo", func(c *gin.Context) {
 		questionnaireInfo := []QuestionnaireInfo{
 			{0, "2023 Freshman Second Questionnaire", "Enabled", 0, "0daaas"},
@@ -94,7 +97,7 @@ func InitRouter(r *gin.Engine) {
 	r.OPTIONS("/questionnaire", func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
 		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		c.Header("Access-Control-Allow-Headers", "Content-Type")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Status(http.StatusOK)
 	})
 	r.POST("/questionnaire", func(c *gin.Context) {
@@ -148,5 +151,4 @@ func InitRouter(r *gin.Engine) {
 			db.Create(&data)
 	})
 
-	r.POST("/feedback", controller.Feedback)
 }

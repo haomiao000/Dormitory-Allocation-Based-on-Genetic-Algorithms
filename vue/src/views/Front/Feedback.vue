@@ -27,10 +27,11 @@ export default {
   },
   methods:{
     submit(){
-      request.post("http://localhost:8080/feedback",{
-        "content":this.input
-      }).then(res=>{
-        console.log(res)
+      request.post("/feedback",{"content":this.input}).then(res=>{
+        this.$message({
+          message: '反馈成功',
+          type: 'success'
+        })
       },err=>{
         Message.error(err)
       })
