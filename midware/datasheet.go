@@ -11,7 +11,7 @@ type Login struct {
 }
 
 type UserBaseInfo struct {
-	UID                    uint   `gorm:"column:uid;auto_increment;primary_key"`
+	UID                    int64  `gorm:"column:uid							type:INT"`						
 	Name                   string `gorm:"column:name						type:NVARCHAR"`
 	Sex                    string `gorm:"column:sex							type:NVARCHAR"`
 	Major                  string `gorm:"column:major						type:NVARCHAR"`
@@ -23,7 +23,7 @@ type UserBaseInfo struct {
 }
 
 type UserQuestionnaireData struct {
-	UID                     uint   `gorm:"column:uid;						type:INT"`
+	UID                     int64   `gorm:"column:uid						type:INT"`
 	BedTime                 string `gorm:"column:bedTime					type:NVARCHAR"`
 	WakeUpTime              string `gorm:"column:wakeUpTime					type:NVARCHAR"`
 	SleepQuality            string `gorm:"column:sleepQuality				type:NVARCHAR"`

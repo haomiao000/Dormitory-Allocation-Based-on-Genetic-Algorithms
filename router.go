@@ -2,9 +2,11 @@ package main
 
 import (
 	"Dormitory-Distribution-System/controller"
+	"Dormitory-Distribution-System/midware"
+	"fmt"
 	"net/http"
 	"strings"
-	"Dormitory-Distribution-System/midware"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -100,7 +102,9 @@ func InitRouter(r *gin.Engine) {
 		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Status(http.StatusOK)
 	})
+	r.Use(midware.AuthMiddleware())
 	r.POST("/questionnaire", func(c *gin.Context) {
+		fmt.Println("here is wrong --")
 		var requestData QuestionnaireData
 
 		if err := c.BindJSON(&requestData); err != nil {
@@ -113,8 +117,16 @@ func InitRouter(r *gin.Engine) {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println("here is wrong --")
+		userID, exists := c.Get("UID")
+		if !exists {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Errorr"})
+			return
+		}
+		fmt.Println("here is wrong --")
 		db.AutoMigrate(&midware.UserBaseInfo{})
 		var data2 midware.UserBaseInfo
+		data2.UID = userID.(int64)
 		data2.Age = requestData.Age
 		data2.Name = requestData.Name
 		data2.Major = requestData.Major
@@ -124,6 +136,7 @@ func InitRouter(r *gin.Engine) {
 		} else {
 			data2.Sex = "1"
 		}
+		fmt.Println("here is wrong --")
 		data2.SychronizedSchedule = requestData.SameRoutine.(string)
 		data2.SpendingResponsibility = strings.Join(requestData.CostType, ",")
 		data2.Interests = strings.Join(requestData.Hobby, ",")

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
+	"strings"
 	// "testLogin/controller"
 
 	"github.com/gin-gonic/gin"
@@ -40,29 +40,40 @@ func ParseToken(tokenString string) (*MyClaims , error){
 	}
 	
 	if !token.Valid {
+		// fmt.Println("invalid token")
 		return nil , errors.New("invalid token")
 	}
 	return &claims , nil
 }
 
-func AuthMiddleware() gin.HandlerFunc{
-	return func(c *gin.Context){
-		// fmt.Println("here is wrong -")
+func AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
-		if tokenString == ""{
+		if tokenString == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
 		}
-		// fmt.Println("here is wrong --")
-		claims , err := ParseToken(tokenString)
-		if err != nil{
+
+		// 检查和移除 Bearer 前缀
+		if strings.HasPrefix(tokenString, "Bearer ") {
+			tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
 		}
-		fmt.Println("here is wrong ---")
-		c.Set("UID" , claims.UserID)
+
+		claims, err := ParseToken(tokenString)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
+		fmt.Println(claims.UserID)
+		c.Set("UID", claims.UserID)
 		c.Next()
 	}
 }
