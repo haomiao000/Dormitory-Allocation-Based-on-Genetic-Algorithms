@@ -7,9 +7,9 @@
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="name" label="室友名称" ></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
-        <template>
+        <template slot-scope="scope">
           <el-row>
-            <el-button type="primary" @click="checkQuesionnaire">查看问卷</el-button>
+            <el-button type="primary" @click="checkQuesionnaire(scope.row)">查看问卷</el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -278,8 +278,22 @@ export default {
     })
   },
   methods:{
-    checkQuesionnaire(){
-      this.dialogVisble = true
+    checkQuesionnaire(record){
+      // 这里record是当前点击的那一行,
+      // 根据uid查找
+      request.get(`/questionnaireInfo`).then(res=>{
+        const data = res.filter(item=>item.uid && record.uid && item.uid === record.uid)
+        if(data.length>0){
+          this.form = data[0]
+          this.dialogVisble = true
+        }
+        else {
+          this.$message({
+            message: '该问卷未填写',
+            type: 'error'
+          })
+        }
+      })
       // 与后端对接时用,获取室友问卷的具体信息
       request.get("/rsTable").then(res=>{
         this.form = res.data
