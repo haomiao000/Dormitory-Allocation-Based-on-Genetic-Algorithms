@@ -27,7 +27,11 @@ export default {
   },
   methods:{
     submit(){
+<<<<<<< HEAD
       request.post("/feedback",{"context":this.input}).then(res=>{
+=======
+      request.post("/feedback",{"content":this.input}).then(res=>{
+>>>>>>> be390a9e72e53afd9cf28edcd8a8dd0f068bb755
         this.$message({
           message: '反馈成功',
           type: 'success'
