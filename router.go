@@ -13,6 +13,7 @@ import (
 )
 
 type Results struct {
+	UID string 	`json:"uid"`
 	Name string `json:"name"`
 }
 type QuestionnaireInfo struct {
@@ -85,11 +86,7 @@ func InitRouter(r *gin.Engine) {
 	
 	r.GET("/results", func(c *gin.Context) {
 		results := []Results{
-			{"林浩"},
-			{"冯国强"},
-			{"陈国华"},
-			{"吴国强"},
-			{"李玉英"},
+
 		}
 		c.JSON(http.StatusOK, results)
 	})

@@ -281,6 +281,9 @@ export default {
     checkQuesionnaire(){
       this.dialogVisble = true
       // 与后端对接时用,获取室友问卷的具体信息
+      request.get("/rsTable").then(res=>{
+        this.form = res.data
+      })
       // axios.get("").then(res=>{
       //   this.form=res.data
       // })
