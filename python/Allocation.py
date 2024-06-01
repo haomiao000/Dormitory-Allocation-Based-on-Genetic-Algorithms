@@ -172,7 +172,7 @@ def getStuData_db():
     stuDataDict={}
     with sqlite3.connect(dbpath) as db:
         cur=db.cursor()
-        cur.execute("select * from user_questionnaire_data")#UserHabbit
+        cur.execute("select * from user_questionnaire_datas")#UserHabbit
         for uid,*anslist in cur:
             sidlist.append(uid)
             stu=StudentData(uid)
@@ -186,10 +186,18 @@ def writeAllocation(li:list[tuple],second=False):
     with sqlite3.connect(dbpath) as db:
         cur=db.cursor()
         for (uid,roomid) in li:
+
+            cur.execute(f"select count(*) from distribution_results where uid={uid}")
+            cnt=cur.fetchone()[0]
+            #print(f'{uid=} {cnt=}')
+            if cnt==0:
+                cur.execute(f"insert into distribution_results values({uid},'0',{uid},'0','0')")
+
             if second:
                 cur.execute(f"update distribution_results set ReassignResult={roomid} where uid={uid}")
             else:
                 cur.execute(f"update distribution_results set RoomNumber={roomid} where uid={uid}")
+        db.commit()
 def ans_merge(*ansli):#合并
     sidlist=[]#
     cnt=0
@@ -204,6 +212,7 @@ def ans_merge(*ansli):#合并
 def main_mpga_base(sids:list,title_name='',*,file_count=[0]):#不分男女
     # ps=Poolsys(pi=0.5)
     # ps.add(num=5,cls=Allocation,size=100,pc=0.9,pm=0.1,ps=10/100,select=Selection(0))
+    if not sids:return []
     global sidlist
     sidlist=sids
     ps=Poolsys(pi=sysarg.pi)
@@ -254,12 +263,12 @@ def main_second():#二次分配
         cur.execute(f"select uid,RoomNumber,DecisionForReassign from distribution_results")
         for uid,rid,reAllocation in cur:
             allo[uid]=rid
-            if reAllocation:rids.add(rid)
+            if int(reAllocation):rids.add(rid)
     sidlist=[]#重置分寝列表
     for uid,rid in allo.items():
         if rid in rids:
             sidlist.append(uid)
-    
+    #print(rids,sidlist)#重新分配的寝室名单和学生名单
     if rids:#需要重分配
         ans=main_mpga(sidlist)
         first_rid=list(rids)

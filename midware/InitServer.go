@@ -36,5 +36,9 @@ func InitService() {
 	if err = DB.AutoMigrate(&UserFeedback{}); err != nil {
 		fmt.Printf("[DB Err]\t%v\n", err)
 	}
+	if err = DB.AutoMigrate(&DistributionResult{}); err != nil {
+		fmt.Printf("[DB Err]\t%v\n", err)
+	}
+
 	// init DataSheet
 }

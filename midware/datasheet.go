@@ -11,38 +11,41 @@ type Login struct {
 }
 
 type UserBaseInfo struct {
-	UID                    int64  `gorm:"column:uid							type:INT"`						
-	Name                   string `gorm:"column:name						type:NVARCHAR"`
-	Sex                    string `gorm:"column:sex							type:NVARCHAR"`
-	Major                  string `gorm:"column:major						type:NVARCHAR"`
-	Age                    string `gorm:"column:age							type:NVARCHAR"`
-	Homestr                string `gorm:"column:home						type:NVARCHAR"`
-	SychronizedSchedule    string `gorm:"column:sychronizedSchedule			type:NVARCHAR"`
-	SpendingResponsibility string `gorm:"column:spendingResponsibility		type:NVARCHAR"`
-	Interests              string `gorm:"column:interests					type:NVARCHAR"`
+	UID                    int64  `gorm:"column:uid;							type:INT"`		//唯一（可以生成自增）				
+	Name                   string `gorm:"column:name;						type:NVARCHAR"` //(随机字符串汉字 or 5位英文名都行)
+	Sex                    string `gorm:"column:sex;						type:NVARCHAR"`	//0 or 1
+	Major                  string `gorm:"column:major;						type:NVARCHAR"` //随机字符串
+	Age                    string `gorm:"column:age;							type:NVARCHAR"` // 数字年龄
+	Homestr                string `gorm:"column:home;						type:NVARCHAR"` //"天津市,河东区"
+	SychronizedSchedule    string `gorm:"column:sychronizedSchedule;			type:NVARCHAR"` //"0"
+	SpendingResponsibility string `gorm:"column:spendingResponsibility;		type:NVARCHAR"` //"娱乐活动"
+	Interests              string `gorm:"column:interests;					type:NVARCHAR"` //"读书学习"
+	Ethnic 	 			   string `gorm:"column:ethnic;						type:NVARCHAR"`//随机字符串
+	StudentId			   string `gorm:"column:studentnumber;				type:NVARCHAR"`//随机10位数字
 }
 
 type UserQuestionnaireData struct {
-	UID                     int64   `gorm:"column:uid						type:INT"`
-	BedTime                 string `gorm:"column:bedTime					type:NVARCHAR"`
-	WakeUpTime              string `gorm:"column:wakeUpTime					type:NVARCHAR"`
-	SleepQuality            string `gorm:"column:sleepQuality				type:NVARCHAR"`
-	DomStudy                string `gorm:"column:domStudy					type:NVARCHAR"`
-	Smoke                   string `gorm:"column:smoke						type:NVARCHAR"`
-	Drink                   string `gorm:"column:drink						type:NVARCHAR"`
-	Snore                   string `gorm:"column:snore						type:NVARCHAR"`
-	ChattingSharinsThoushts string `gorm:"column:chattingSharinsThoushts	type:NVARCHAR"`
-	Leanliness              string `gorm:"column:leanliness					type:NVARCHAR"`
-	Cleaningfrsgueney       string `gorm:"column:cleaningfrsgueney			type:NVARCHAR"`
-	ShowerFrequency         string `gorm:"column:showerkrequency			type:NVARCHAR"`
-	MonthlyBudget           string `gorm:"column:monthlyBudset				type:NVARCHAR"`
-	JointOutings            string `gorm:"column:jointOutings				type:NVARCHAR"`
-	SharedExpenses          string `gorm:"column:sharedExpenses				type:NVARCHAR"`
-	SharedInterests         string `gorm:"column:sharedInterests			type:NVARCHAR"`
+	UID                     int64   `gorm:"column:uid;						type:INT"` //唯一（可以生成自增）
+	BedTime                 string `gorm:"column:bedTime;					type:NVARCHAR"` //0-3
+	WakeUpTime              string `gorm:"column:wakeUpTime;					type:NVARCHAR"` //0-3
+	SleepQuality            string `gorm:"column:sleepQuality;				type:NVARCHAR"` //0-2
+	DomStudy                string `gorm:"column:domStudy;					type:NVARCHAR"` //0-1
+	Smoke                   string `gorm:"column:smoke;						type:NVARCHAR"` //0-1
+	Drink                   string `gorm:"column:drink;						type:NVARCHAR"` //0-1
+	Snore                   string `gorm:"column:snore;						type:NVARCHAR"` //0-1
+	ChattingSharinsThoushts string `gorm:"column:chattingSharinsThoushts;	type:NVARCHAR"` //0-2
+	Leanliness              string `gorm:"column:leanliness;					type:NVARCHAR"` //0-3
+	Cleaningfrsgueney       string `gorm:"column:cleaningfrsgueney;			type:NVARCHAR"` //0-4
+	ShowerFrequency         string `gorm:"column:showerkrequency;			type:NVARCHAR"` //0-3
+	MonthlyBudget           string `gorm:"column:monthlyBudset;				type:NVARCHAR"` //0-3
+	JointOutings            string `gorm:"column:jointOutings;				type:NVARCHAR"` //0-2
+	SharedExpenses          string `gorm:"column:sharedExpenses;				type:NVARCHAR"` //0-2
+	SharedInterests         string `gorm:"column:sharedInterests;			type:NVARCHAR"` //0-1
 }
 
 // 分配结果表
 type DistributionResult struct {
+	AllocationID        int64  `gorm:"column:AllocationID;auto_increment;primary_key"`
 	RoomNumber          string `gorm:"column:RoomNumber;          			type:NVARCHAR"`
 	UID                 int64  `gorm:"column:UID;       					type:INT"`
 	DecisionForReassign string `gorm:"column:DecisionForReassign;           type:NVARCHAR"`

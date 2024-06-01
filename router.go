@@ -3,7 +3,7 @@ package main
 import (
 	"Dormitory-Distribution-System/controller"
 	"Dormitory-Distribution-System/midware"
-	"fmt"
+	// "fmt"
 	"net/http"
 	"strings"
 
@@ -13,7 +13,7 @@ import (
 )
 
 type Results struct {
-	UID string 	`json:"uid"`
+	UID  int64 	`json:"uid"`
 	Name string `json:"name"`
 }
 type QuestionnaireInfo struct {
@@ -24,7 +24,7 @@ type QuestionnaireInfo struct {
 	ID     string `json:"id"`
 }
 type QuestionnaireData struct {
-	ID  string `json:"id"`
+	UID  int64 `json:"uid"`
 	Qid struct {
 		IsTrusted bool `json:"isTrusted"`
 	} `json:"qid"`
@@ -84,12 +84,7 @@ func InitRouter(r *gin.Engine) {
 		c.JSON(http.StatusOK, questionnaireInfo)
 	})
 	
-	r.GET("/results", func(c *gin.Context) {
-		results := []Results{
 
-		}
-		c.JSON(http.StatusOK, results)
-	})
 
 	r.OPTIONS("/questionnaire", func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
@@ -98,6 +93,92 @@ func InitRouter(r *gin.Engine) {
 		c.Status(http.StatusOK)
 	})
 	r.Use(midware.AuthMiddleware())
+	r.GET("/results", func(c *gin.Context) {
+		userID, exists := c.Get("UID")
+		if !exists {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Errorr"})
+			return
+		}
+		var userResult midware.DistributionResult
+		if err := midware.DB.Where("UID = ?", userID).First(&userResult).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query user result"})
+			return
+		}
+		var similarRoomResults []midware.DistributionResult
+		if err := midware.DB.Where("RoomNumber = ?", userResult.RoomNumber).Find(&similarRoomResults).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query similar room results"})
+			return
+		}
+		var results []Results
+		for _, similarResult := range similarRoomResults {
+			var userInfo midware.UserBaseInfo
+			if err := midware.DB.Where("uid = ?", similarResult.UID).First(&userInfo).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query user info"})
+				return
+			}
+			results = append(results, Results{UID: similarResult.UID, Name: userInfo.Name})
+		}
+		c.JSON(http.StatusOK, results)
+	})
+	r.GET("/questionnaireresult" , func(c *gin.Context){
+		userID, exists := c.Get("UID")
+		if !exists {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Errorr"})
+			return
+		}
+		var userResult midware.DistributionResult
+		if err := midware.DB.Where("UID = ?", userID).First(&userResult).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query user result"})
+			return
+		}
+		var similarRoomResults []midware.DistributionResult
+		if err := midware.DB.Where("RoomNumber = ?", userResult.RoomNumber).Find(&similarRoomResults).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query similar room results"})
+			return
+		}
+		var Rootmatequestion []QuestionnaireData
+		for _, similarResult := range similarRoomResults {
+			var quesbaseinfo midware.UserBaseInfo
+			var quesquesinfo midware.UserQuestionnaireData
+			if err := midware.DB.Where("uid = ?", similarResult.UID).First(&quesbaseinfo).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query user info"})
+				return
+			}
+			if err := midware.DB.Where("uid = ?", similarResult.UID).First(&quesquesinfo).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query user info"})
+				return
+			}
+			Rootmatequestion = append(Rootmatequestion, QuestionnaireData{
+				UID:                 quesbaseinfo.UID,
+				StudentId:			 quesbaseinfo.StudentId,
+				Name:                quesbaseinfo.Name,
+				Sex:                 quesbaseinfo.Sex,
+				Major:               quesbaseinfo.Major,
+				Age:                 quesbaseinfo.Age,
+				Home:                strings.Split(quesbaseinfo.Homestr, ","),
+				Ethnic:              quesbaseinfo.Ethnic,
+				SleepTime:           quesquesinfo.BedTime,
+				GetupTime:           quesquesinfo.WakeUpTime,
+				SameRoutine:         quesbaseinfo.SychronizedSchedule,
+				LearnInDorm:         quesquesinfo.DomStudy,
+				NeatExpection:       quesquesinfo.Leanliness,
+				CleanPeriod:         quesquesinfo.Cleaningfrsgueney,
+				BathePeriod:         quesquesinfo.ShowerFrequency,
+				Expense:             quesquesinfo.MonthlyBudget,
+				CostType:            strings.Split(quesbaseinfo.SpendingResponsibility, ","),
+				OutCost:             quesquesinfo.JointOutings,
+				ShareCost:           quesquesinfo.SharedExpenses,
+				Hobby:               strings.Split(quesbaseinfo.Interests, ","),
+				HobbySameExpection:  quesquesinfo.SharedInterests,
+				WantCommunicate:     quesquesinfo.ChattingSharinsThoushts,
+				Smoke:               quesquesinfo.Smoke,
+				Drink:               quesquesinfo.Drink,
+				Snore:               quesquesinfo.Snore,
+				SleepQuality:        quesquesinfo.SleepQuality,
+			})
+		}
+		c.JSON(http.StatusOK, Rootmatequestion)
+	})
 	r.POST("/reassign" , func(c *gin.Context){
 		var rs midware.DistributionResult
 		userID, exists := c.Get("UID")
@@ -117,7 +198,7 @@ func InitRouter(r *gin.Engine) {
 	})
 	r.POST("/feedback", controller.Feedback)
 	r.POST("/questionnaire", func(c *gin.Context) {
-		fmt.Println("here is wrong --")
+		// fmt.Println("here is wrong --")
 		var requestData QuestionnaireData
 
 		if err := c.BindJSON(&requestData); err != nil {
@@ -130,13 +211,13 @@ func InitRouter(r *gin.Engine) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("here is wrong --")
+		// fmt.Println("here is wrong --")
 		userID, exists := c.Get("UID")
 		if !exists {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Errorr"})
 			return
 		}
-		fmt.Println("here is wrong --")
+		// fmt.Println("here is wrong --")
 		db.AutoMigrate(&midware.UserBaseInfo{})
 		var data2 midware.UserBaseInfo
 		data2.UID = userID.(int64)
@@ -149,7 +230,9 @@ func InitRouter(r *gin.Engine) {
 		} else {
 			data2.Sex = "1"
 		}
-		fmt.Println("here is wrong --")
+		data2.Ethnic = requestData.Ethnic
+		data2.StudentId = requestData.StudentId.(string)
+		// fmt.Println("here is wrong --")
 		data2.SychronizedSchedule = requestData.SameRoutine.(string)
 		data2.SpendingResponsibility = strings.Join(requestData.CostType, ",")
 		data2.Interests = strings.Join(requestData.Hobby, ",")

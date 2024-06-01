@@ -60,7 +60,7 @@ select * from user_questionnaire_datas;
 select * from user_base_infos;
 
 
-python3 ./python/Allocation.py --dbpath gorm.db --image del.png --rounds=1000 --end_bound=100
+python3 ./python/Allocation.py --dbpath gorm.db --image del.png --rounds=10 --end_bound=100
 
 ## testtool脚本参数：
 g++ -o q_db q_db.cpp -lsqlite3

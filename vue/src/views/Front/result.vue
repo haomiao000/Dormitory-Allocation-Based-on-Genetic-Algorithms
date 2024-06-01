@@ -281,8 +281,10 @@ export default {
     checkQuesionnaire(record){
       // 这里record是当前点击的那一行,
       // 根据uid查找
-      request.get(`/questionnaireInfo`).then(res=>{
+      request.get(`/questionnaireresult`).then(res=>{
         const data = res.filter(item=>item.uid && record.uid && item.uid === record.uid)
+        console.log(record , data , res )
+
         if(data.length>0){
           this.form = data[0]
           this.dialogVisble = true
@@ -295,9 +297,9 @@ export default {
         }
       })
       // 与后端对接时用,获取室友问卷的具体信息
-      request.get("/rsTable").then(res=>{
-        this.form = res.data
-      })
+      // request.get("/rsTable").then(res=>{
+      //   this.form = res.data
+      // })
       // axios.get("").then(res=>{
       //   this.form=res.data
       // })
@@ -311,28 +313,6 @@ export default {
       },err=>{
         Message.error(err)
       })
-        // const requestData = {
-        //   data: "yes"
-        // };
-
-        // axios.post("/reassign", requestData)
-        //   .then(res => {
-        //     // 处理后端响应数据
-        //     console.log("后端响应:", res.data);
-            
-        //     // 显示消息
-        //     this.$message({
-        //       message: '收到重新分配需求！',
-        //       type: 'success'
-        //     });
-        //   })
-        //   .catch(error => {
-        //     // 处理请求错误
-        //     console.error("请求失败:", error);
-            
-        //     // 显示错误消息
-        //     this.$message.error('重新分配请求失败！');
-        //   });
       }
   }
 }

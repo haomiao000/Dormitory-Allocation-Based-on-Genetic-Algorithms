@@ -2,7 +2,7 @@ package controller
 
 import (
 	"Dormitory-Distribution-System/midware"
-	"fmt"
+	// "fmt"
 	"net/http"
 	"time"
 
@@ -17,9 +17,9 @@ func Feedback(c *gin.Context) {
 	}
 	var fb midware.UserFeedback
 	userID, exists := c.Get("UID")
-	fmt.Println(userID)
+	// fmt.Println(userID)
 	if !exists {
-		fmt.Println("here is www")
+		// fmt.Println("here is www")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "????"})
 		return
 	}

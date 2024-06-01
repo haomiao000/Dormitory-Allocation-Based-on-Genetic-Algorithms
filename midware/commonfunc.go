@@ -66,13 +66,13 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		claims, err := ParseToken(tokenString)
 		if err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
 		}
 
-		fmt.Println(claims.UserID)
+		// fmt.Println(claims.UserID)
 		c.Set("UID", claims.UserID)
 		c.Next()
 	}
@@ -83,7 +83,7 @@ func GetUserHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Errorr"})
 		return
 	}
-	fmt.Println(userID)
+	// fmt.Println(userID)
 
 	c.JSON(http.StatusOK, gin.H{"UID": userID})
 }

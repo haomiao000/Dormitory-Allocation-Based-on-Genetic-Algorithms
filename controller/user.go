@@ -4,10 +4,10 @@ import (
 	"Dormitory-Distribution-System/midware"
 	// "errors"
 	"net/http"
-	"crypto/sha256"
+	// "crypto/sha256"
 	"github.com/gin-gonic/gin"
 	// "gorm.io/gorm"
-	"encoding/hex"
+	// "encoding/hex"
 )
 func Register(c *gin.Context){
 	var userJSON midware.RegisterRequest
@@ -19,7 +19,7 @@ func Register(c *gin.Context){
 	user.SchoolNumber = userJSON.Username
 	user.PassWord = userJSON.Password
 	user.Authority = 0
-	user.PassWord = hashPassword(user.PassWord)
+	// user.PassWord = hashPassword(user.PassWord)
 	if err := midware.DB.Create(&user).Error; err!=nil{
 		c.JSON(http.StatusInternalServerError , gin.H{"error":err.Error()})
 	}
@@ -32,7 +32,7 @@ func Login(c *gin.Context){
 		return
 	}
 	var user midware.Login
-	if err := midware.DB.Where("schoolNumber = ? AND passWord = ?" , userJSON.Username , hashPassword(userJSON.Password)).First(&user).Error; err != nil{
+	if err := midware.DB.Where("schoolNumber = ? AND passWord = ?" , userJSON.Username , /*hashPassword(*/userJSON.Password).First(&user).Error; err != nil{
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
         return
 	}
@@ -47,9 +47,9 @@ func Login(c *gin.Context){
 }
 
 
-func hashPassword(password string) string{
-	hasher := sha256.New()
-	hasher.Write([]byte(password))
-	hashedPassword := hasher.Sum(nil)
-	return hex.EncodeToString(hashedPassword)
-}
+// func hashPassword(password string) string{
+// 	hasher := sha256.New()
+// 	hasher.Write([]byte(password))
+// 	hashedPassword := hasher.Sum(nil)
+// 	return hex.EncodeToString(hashedPassword)
+// }

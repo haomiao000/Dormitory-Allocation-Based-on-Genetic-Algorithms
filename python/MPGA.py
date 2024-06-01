@@ -163,9 +163,9 @@ class Poolsys:  # 多种群管理
             self.log()
             self.axis_x = [0]
         log_file_path = '/Users/hao/Desktop/go/Dormitory-Distribution-System/log.txt'
-
+        log_file_path='log.txt'
         with open(log_file_path, 'w') as f:
-            for round_num in range(1, 1000):  # 假设这是你的循环范围
+            for round_num in range(rounds):  # 假设这是你的循环范围
                 t_now = time.time()
                 print(f'r:{round_num}\tmax={self.elite_max[-1]}\ttime={t_now - t_last}', file=f)
                 print(f'r:{round_num}\tmax={self.elite_max[-1]}\ttime={t_now - t_last}')
